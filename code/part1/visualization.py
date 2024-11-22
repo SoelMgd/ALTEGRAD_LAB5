@@ -56,3 +56,5 @@ def visualize(model, n, dim):
 
 
 visualize(model, 100, n_dim)
+
+#cecei est un test
