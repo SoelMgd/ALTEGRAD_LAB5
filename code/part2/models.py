@@ -39,4 +39,4 @@ class GNN(nn.Module):
         ##################
 
 
-        return out
+        return out, z1

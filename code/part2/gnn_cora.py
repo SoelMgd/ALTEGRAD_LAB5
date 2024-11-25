@@ -84,6 +84,7 @@ def test():
           "loss= {:.4f}".format(loss_test.item()),
           "accuracy= {:.4f}".format(acc_test))
 
+    # Return embeddings for the test set nodes
     return embeddings[idx_test]
 
 
@@ -101,36 +102,33 @@ embeddings_test = test()
 
 
 ############## Task 13
-# Transforms torch tensor to numpy matrix
 
 ##################
-# your code here #
+
+embeddings_test_np = embeddings_test.detach().cpu().numpy()
+
+tsne = TSNE(n_components=2, random_state=42)
+embeddings_test_2d = tsne.fit_transform(embeddings_test_np)
 ##################
 
-
-# Projects the emerging representations to two dimensions using t-SNE
-
-##################
-# your code here #
-##################
-
-
-labels = class_labels[idx_test]
+labels = class_labels[idx_test.cpu().numpy()]  # Ensure correct indexing
 unique_labels = np.unique(labels)
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
 
 fig, ax = plt.subplots()
 for i in range(unique_labels.size):
-    idxs = [j for j in range(labels.size) if labels[j]==unique_labels[i]]
-    ax.scatter(embeddings_test_2d[idxs,0], 
-               embeddings_test_2d[idxs,1], 
+    idxs = [j for j in range(labels.size) if labels[j] == unique_labels[i]]
+    ax.scatter(embeddings_test_2d[idxs, 0], 
+               embeddings_test_2d[idxs, 1], 
                c=colors[i],
-               label=i,
+               label=f'Class {i}',
                alpha=0.7,
                s=10)
 
 ax.legend(scatterpoints=1)
-fig.suptitle('T-SNE Visualization of the nodes of the test set',fontsize=12)
-fig.set_size_inches(15,9)
+fig.suptitle('T-SNE Visualization of the nodes of the test set', fontsize=12)
+fig.set_size_inches(15, 9)
+plt.savefig('Cora.png')
 plt.show()
+
