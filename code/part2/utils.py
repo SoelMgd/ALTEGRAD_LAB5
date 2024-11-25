@@ -1,24 +1,24 @@
 """
 Deep Learning on Graphs - ALTEGRAD - Nov 2024
 """
-
 import scipy.sparse as sp
 import numpy as np
 import torch
 from sklearn.preprocessing import LabelEncoder
 
+
 def normalize_adjacency(A):
     ############## Task 9
-
+    A_with_self_loops = A + sp.eye(A.shape[0])
+    degree = np.array(A_with_self_loops.sum(axis=1)).flatten()
+    D_inv_sqrt = sp.diags(1.0 / np.sqrt(degree))
+    A_normalized = D_inv_sqrt @ A_with_self_loops @ D_inv_sqrt
     ##################
-    # your code here #
-    ##################
-    
-	return A_normalized
+    return A_normalized
 
 
 def load_cora():
-    idx_features_labels = np.genfromtxt("../data/cora.content", dtype=np.dtype(str))
+    idx_features_labels = np.genfromtxt("/content/ALTEGRAD_LAB5/code/data/cora.content", dtype=np.dtype(str))
     features = sp.csr_matrix(idx_features_labels[:, 1:-1], dtype=np.float32)
     features = features.todense()
     features /= features.sum(1).reshape(-1, 1)
@@ -30,7 +30,7 @@ def load_cora():
     # build graph
     idx = np.array(idx_features_labels[:, 0], dtype=np.int32)
     idx_map = {j: i for i, j in enumerate(idx)}
-    edges_unordered = np.genfromtxt("../data/cora.cites", dtype=np.int32)
+    edges_unordered = np.genfromtxt("/content/ALTEGRAD_LAB5/code/data/cora.cites", dtype=np.int32)
     edges = np.array(list(map(idx_map.get, edges_unordered.flatten())), dtype=np.int32).reshape(edges_unordered.shape)
     adj = sp.coo_matrix((np.ones(edges.shape[0]), (edges[:, 0], edges[:, 1])), shape=(class_labels.size, class_labels.size), dtype=np.float32)
 

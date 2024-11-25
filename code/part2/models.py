@@ -21,8 +21,22 @@ class GNN(nn.Module):
         ############## Tasks 10 and 13
         
         ##################
-        # your code here #
+        # First message passing layer
+        z0 = self.fc1(x_in)  # Apply W0
+        z0 = torch.mm(adj, z0)  # Multiply by A
+        z0 = self.relu(z0) 
+        z0 = self.dropout(z0) 
+
+        # Second message passing layer
+        z1 = self.fc2(z0)  # Apply W1
+        z1 = torch.mm(adj, z1)  # Multiply by A
+        z1 = self.relu(z1)
+        z1 = self.dropout(z1)
+
+        # Fully connected layer and softmax
+        z2 = self.fc3(z1)  # Apply W2
+        out = F.log_softmax(z2, dim=1)  # Softmax over classes
         ##################
 
 
-        return F.log_softmax(x, dim=1)
+        return out
