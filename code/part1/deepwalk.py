@@ -21,7 +21,7 @@ def random_walk(G, node, walk_length):
             walk.append(next_node)
             current_node = next_node
         else:
-            break  # No more neighbors to visit
+            break  
     walk = [str(node) for node in walk]
     shuffle(walk)
     return walk
@@ -33,13 +33,13 @@ def generate_walks(G, num_walks, walk_length):
     walks = []
     nodes = list(G.nodes())
     
-    for _ in range(num_walks):  # Run num_walks random walks from each node
+    for _ in range(num_walks): 
         shuffle(nodes)  # Shuffle nodes to avoid introducing order bias
         for node in nodes:
             walk = random_walk(G, node, walk_length)
             walks.append(walk)
     
-    # Shuffle the list of walks to permute the order
+    
     shuffle(walks)
     
     return walks
